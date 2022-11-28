@@ -26,6 +26,34 @@ const createNewBlog = async (newBlog, user) => {
   return response.data
 }
 
-const forExport = { getAll, setToken, createNewBlog }
+const increaseLikes = async ({ title, author, url, likes, id }) => {
+  const blogToSend = {
+    title,
+    author,
+    url,
+    likes: likes + 1,
+  }
+
+  const response = await axios.put(
+    `${baseUrl}/${id}`,
+    blogToSend
+  )
+  return response.data
+}
+
+const deleteBlog = async (id, user) => {
+  const configHeaders = {
+    headers: {
+      'Authorization': `bearer ${user.token}`,
+    }
+  }
+  const response = await axios.delete(
+    `${baseUrl}/${id}`,
+    configHeaders
+  )
+  return response.data
+}
+
+const forExport = { getAll, setToken, createNewBlog, increaseLikes, deleteBlog }
 
 export default forExport

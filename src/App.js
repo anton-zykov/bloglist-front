@@ -18,10 +18,10 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     )  
   }, [])
-  
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
@@ -74,6 +74,42 @@ const App = () => {
     }
   }
 
+  const handleLikeIncrease = async (blog) => {
+    try {
+      await blogService.increaseLikes(blog)
+      setSuccessMessage(`You liked ${blog.title} by ${blog.author}.`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+      return true
+    } catch (error) {
+      setErrorMessage(error.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      console.log(error.response.data.error)
+    }
+  }
+
+  const handleBlogDelete = async (blog) => {
+    if (window.confirm(`Please confirm removing blog ${blog.title} by ${blog.author}.`)) {
+      try {
+        await blogService.deleteBlog(blog.id, user)
+        setSuccessMessage(`${blog.title} by ${blog.author} was successfully deleted.`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+        return true
+      } catch (error) {
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        console.log(error.response.data.error)
+      }
+    }
+  }
+
   if (user !== null) {
     return (
       <div>
@@ -92,7 +128,14 @@ const App = () => {
           </Togglable>
 
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog 
+              key={blog.id}
+              user={user}
+              blog={blog}
+              handleLikeIncreaseParentFunction={handleLikeIncrease}
+              handleBlogDeleteParentFunction={handleBlogDelete}
+              blogs={blogs}
+              setBlogs={setBlogs} />
           )}
       </div>
     )
