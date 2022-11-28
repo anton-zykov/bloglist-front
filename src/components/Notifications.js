@@ -8,7 +8,7 @@ const SuccessNotification = ({ message }) => {
     </div>
   )
 }
-  
+
 const ErrorNotification = ({ message }) => {
   if (message === null) {
     return null

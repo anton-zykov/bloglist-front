@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const App = () => {
       console.log(error)
     }
   }
-  
+
   const newBlogFormRef = useRef()
 
   const handleCreationOfBlog = async (newBlog) => {
@@ -114,29 +114,29 @@ const App = () => {
     return (
       <div>
         <h2>Blogs</h2>
-          <p>Welcome, {user.name}!</p>
-          <button onClick={() => {
-            window.localStorage.removeItem('loggedUser')
-          }}>Logout</button>
+        <p>Welcome, {user.name}!</p>
+        <button onClick={() => {
+          window.localStorage.removeItem('loggedUser')
+        }}>Logout</button>
 
-          <SuccessNotification message={successMessage} />
-          <ErrorNotification message={errorMessage} />
-          
-          <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
-            <NewBlogForm
-              handleCreationOfBlogParentFunction={handleCreationOfBlog} />
-          </Togglable>
+        <SuccessNotification message={successMessage} />
+        <ErrorNotification message={errorMessage} />
 
-          {blogs.map(blog =>
-            <Blog 
-              key={blog.id}
-              user={user}
-              blog={blog}
-              handleLikeIncreaseParentFunction={handleLikeIncrease}
-              handleBlogDeleteParentFunction={handleBlogDelete}
-              blogs={blogs}
-              setBlogs={setBlogs} />
-          )}
+        <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
+          <NewBlogForm
+            handleCreationOfBlogParentFunction={handleCreationOfBlog} />
+        </Togglable>
+
+        {blogs.map(blog =>
+          <Blog
+            key={blog.id}
+            user={user}
+            blog={blog}
+            handleLikeIncreaseParentFunction={handleLikeIncrease}
+            handleBlogDeleteParentFunction={handleBlogDelete}
+            blogs={blogs}
+            setBlogs={setBlogs} />
+        )}
       </div>
     )
   } else {
@@ -147,7 +147,7 @@ const App = () => {
         <SuccessNotification message={successMessage} />
         <ErrorNotification message={errorMessage} />
 
-        <LoginForm 
+        <LoginForm
           username={username}
           setUsername={setUsername}
           password={password}

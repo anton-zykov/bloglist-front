@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeleteParentFunction, blogs, setBlogs }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
-  
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,11 +10,11 @@ const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeletePa
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   const handleLikeIncrease = async (event) => {
     event.preventDefault()
     if (await handleLikeIncreaseParentFunction(blog)) {
-      const unsortedBlogs = blogs.map((b) => 
+      const unsortedBlogs = blogs.map((b) =>
         b.title === blog.title ? { ...blog, likes: blog.likes + 1 } : b
       )
       setBlogs(unsortedBlogs.sort((a, b) => b.likes - a.likes))
@@ -24,7 +24,7 @@ const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeletePa
   const handleBlogDelete = async (event) => {
     event.preventDefault()
     if (await handleBlogDeleteParentFunction(blog)) {
-      const updatedBlogs = blogs.filter((b) => 
+      const updatedBlogs = blogs.filter((b) =>
         b.title !== blog.title
       )
       setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes))
@@ -34,11 +34,11 @@ const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeletePa
   return (
     <div style={blogStyle}>
       <div>
-        <p>{blog.title} by {blog.author} 
-        {detailsVisible ?
-          <button style={{ margin: 5 }} onClick={() => setDetailsVisible(false)}>Hide details</button>
-          : <button style={{ margin: 5 }} onClick={() => setDetailsVisible(true)}>Show details</button>
-        } </p>
+        <p>{blog.title} by {blog.author}
+          {detailsVisible ?
+            <button style={{ margin: 5 }} onClick={() => setDetailsVisible(false)}>Hide details</button>
+            : <button style={{ margin: 5 }} onClick={() => setDetailsVisible(true)}>Show details</button>
+          } </p>
       </div>
       {detailsVisible ?
         <div>
