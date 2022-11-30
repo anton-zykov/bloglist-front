@@ -33,7 +33,7 @@ const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeletePa
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div className='blogMainInfo'>
         <p>{blog.title} by {blog.author}
           {detailsVisible ?
             <button style={{ margin: 5 }} onClick={() => setDetailsVisible(false)}>Hide details</button>
@@ -41,7 +41,7 @@ const Blog = ({ blog, user, handleLikeIncreaseParentFunction, handleBlogDeletePa
           } </p>
       </div>
       {detailsVisible ?
-        <div>
+        <div className='blogFurtherInfo'>
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLikeIncrease}>Like</button></p>
           <p>{blog.user.name}</p>
