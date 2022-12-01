@@ -56,8 +56,8 @@ const App = () => {
 
   const handleCreationOfBlog = async (newBlog) => {
     try {
-      await blogService.createNewBlog(newBlog, user)
-      setBlogs(blogs.concat(newBlog))
+      const processedNewBlog = await blogService.createNewBlog(newBlog, user)
+      setBlogs(blogs.concat(processedNewBlog))
       setSuccessMessage(`A new blog ${newBlog.title} by ${newBlog.author} added.`)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -117,6 +117,7 @@ const App = () => {
         <p>Welcome, {user.name}!</p>
         <button onClick={() => {
           window.localStorage.removeItem('loggedUser')
+          window.location.reload(false)
         }}>Logout</button>
 
         <SuccessNotification message={successMessage} />

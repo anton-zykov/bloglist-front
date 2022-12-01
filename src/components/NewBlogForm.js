@@ -38,7 +38,7 @@ const NewBlogForm = ({ handleCreationOfBlogParentFunction }) => {
           <input id='url' type='text' value={url} name='Url'
             onChange={({ target }) => setUrl(target.value)} />
         </div>
-        <button type='submit'>Create</button>
+        <button id='createButton' type='submit'>Create</button>
       </form>
     </div>
   )
