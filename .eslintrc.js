@@ -4,11 +4,12 @@ module.exports = {
       "browser": true,
       "es6": true,
       "jest/globals": true,
-      "cypress/globals": true
+//      "cypress/globals": true
   },
   "extends": [ 
       "eslint:recommended",
-      "plugin:react/recommended"
+      "plugin:react/recommended",
+      "prettier"
   ],
   "parserOptions": {
       "ecmaFeatures": {
@@ -24,10 +25,6 @@ module.exports = {
       "indent": [
           "error",
           2  
-      ],
-      'linebreak-style': [
-        'error',
-        'windows'
       ],
       "quotes": [
           "error",

@@ -16,14 +16,10 @@ const getAll = async () => {
 const createNewBlog = async (newBlog, user) => {
   const configHeaders = {
     headers: {
-      'Authorization': `bearer ${user.token}`,
-    }
+      Authorization: `bearer ${user.token}`,
+    },
   }
-  const response = await axios.post(
-    baseUrl,
-    newBlog,
-    configHeaders
-  )
+  const response = await axios.post(baseUrl, newBlog, configHeaders)
   return response.data
 }
 
@@ -35,26 +31,26 @@ const increaseLikes = async ({ title, author, url, likes, id }) => {
     likes: likes + 1,
   }
 
-  const response = await axios.put(
-    `${baseUrl}/${id}`,
-    blogToSend
-  )
+  const response = await axios.put(`${baseUrl}/${id}`, blogToSend)
   return response.data
 }
 
 const deleteBlog = async (id, user) => {
   const configHeaders = {
     headers: {
-      'Authorization': `bearer ${user.token}`,
-    }
+      Authorization: `bearer ${user.token}`,
+    },
   }
-  const response = await axios.delete(
-    `${baseUrl}/${id}`,
-    configHeaders
-  )
+  const response = await axios.delete(`${baseUrl}/${id}`, configHeaders)
   return response.data
 }
 
-const forExport = { getAll, setToken, createNewBlog, increaseLikes, deleteBlog }
+const forExport = {
+  getAll,
+  setToken,
+  createNewBlog,
+  increaseLikes,
+  deleteBlog,
+}
 
 export default forExport

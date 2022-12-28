@@ -24,7 +24,11 @@ describe('<Blog />', () => {
     mockHandler = jest.fn()
 
     container = render(
-      <Blog blog={blog} handleLikeIncreaseParentFunction={mockHandler} user={user} />
+      <Blog
+        blog={blog}
+        handleLikeIncreaseParentFunction={mockHandler}
+        user={user}
+      />
     ).container
   })
 
@@ -61,5 +65,4 @@ describe('<Blog />', () => {
 
     expect(mockHandler.mock.calls).toHaveLength(2)
   })
-
 })

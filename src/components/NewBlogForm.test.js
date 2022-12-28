@@ -9,7 +9,9 @@ describe('<NewBlogForm />', () => {
     const createBlog = jest.fn()
     const appUser = userEvent.setup()
 
-    const { container } = render(<NewBlogForm handleCreationOfBlogParentFunction={createBlog} />)
+    const { container } = render(
+      <NewBlogForm handleCreationOfBlogParentFunction={createBlog} />
+    )
 
     const titleField = container.querySelector('#title')
     const authorField = container.querySelector('#author')

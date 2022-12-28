@@ -3,23 +3,24 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
-import { SuccessNotification, ErrorNotification } from './components/Notifications'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    )
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }, [])
 
   useEffect(() => {
@@ -36,18 +37,17 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password })
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (error) {
-      setErrorMessage(error.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          error.response.data.error, false, 5
+        )
+      )
       console.log(error)
     }
   }
@@ -58,17 +58,19 @@ const App = () => {
     try {
       const processedNewBlog = await blogService.createNewBlog(newBlog, user)
       setBlogs(blogs.concat(processedNewBlog))
-      setSuccessMessage(`A new blog ${newBlog.title} by ${newBlog.author} added.`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          `A new blog ${newBlog.title} by ${newBlog.author} added.`, true, 5
+        )
+      )
       newBlogFormRef.current.toggleVisibility()
       return true
     } catch (error) {
-      setErrorMessage(error.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          error.response.data.error, false, 5
+        )
+      )
       console.log(error.response.data.error)
       return false
     }
@@ -77,34 +79,42 @@ const App = () => {
   const handleLikeIncrease = async (blog) => {
     try {
       await blogService.increaseLikes(blog)
-      setSuccessMessage(`You liked ${blog.title} by ${blog.author}.`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          `You liked ${blog.title} by ${blog.author}.`, true, 5
+        )
+      )
       return true
     } catch (error) {
-      setErrorMessage(error.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          error.response.data.error, false, 5
+        )
+      )
       console.log(error.response.data.error)
     }
   }
 
   const handleBlogDelete = async (blog) => {
-    if (window.confirm(`Please confirm removing blog ${blog.title} by ${blog.author}.`)) {
+    if (
+      window.confirm(
+        `Please confirm removing blog ${blog.title} by ${blog.author}.`
+      )
+    ) {
       try {
         await blogService.deleteBlog(blog.id, user)
-        setSuccessMessage(`${blog.title} by ${blog.author} was successfully deleted.`)
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
+        dispatch(
+          setNotification(
+            `${blog.title} by ${blog.author} was successfully deleted.`, true, 5
+          )
+        )
         return true
       } catch (error) {
-        setErrorMessage(error.response.data.error)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        dispatch(
+          setNotification(
+            error.response.data.error, false, 5
+          )
+        )
         console.log(error.response.data.error)
       }
     }
@@ -115,20 +125,24 @@ const App = () => {
       <div>
         <h2>Blogs</h2>
         <p>Welcome, {user.name}!</p>
-        <button onClick={() => {
-          window.localStorage.removeItem('loggedUser')
-          window.location.reload(false)
-        }}>Logout</button>
+        <button
+          onClick={() => {
+            window.localStorage.removeItem('loggedUser')
+            window.location.reload(false)
+          }}
+        >
+          Logout
+        </button>
 
-        <SuccessNotification message={successMessage} />
-        <ErrorNotification message={errorMessage} />
+        <Notification />
 
         <Togglable buttonLabel='Create new blog' ref={newBlogFormRef}>
           <NewBlogForm
-            handleCreationOfBlogParentFunction={handleCreationOfBlog} />
+            handleCreationOfBlogParentFunction={handleCreationOfBlog}
+          />
         </Togglable>
 
-        {blogs.map(blog =>
+        {blogs.map((blog) => (
           <Blog
             key={blog.id}
             user={user}
@@ -136,8 +150,9 @@ const App = () => {
             handleLikeIncreaseParentFunction={handleLikeIncrease}
             handleBlogDeleteParentFunction={handleBlogDelete}
             blogs={blogs}
-            setBlogs={setBlogs} />
-        )}
+            setBlogs={setBlogs}
+          />
+        ))}
       </div>
     )
   } else {
@@ -145,15 +160,15 @@ const App = () => {
       <div>
         <h2>Log in to application</h2>
 
-        <SuccessNotification message={successMessage} />
-        <ErrorNotification message={errorMessage} />
+        <Notification />
 
         <LoginForm
           username={username}
           setUsername={setUsername}
           password={password}
           setPassword={setPassword}
-          handleLogin={handleLogin} />
+          handleLogin={handleLogin}
+        />
       </div>
     )
   }
