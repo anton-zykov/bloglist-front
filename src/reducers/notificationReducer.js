@@ -11,7 +11,7 @@ const notificationSlice = createSlice({
     },
     clearNotification(/*state, action*/) {
       return { content: '', success: true }
-    }
+    },
   },
 })
 
@@ -25,5 +25,6 @@ export const setNotification = (content, success, time) => {
   }
 }
 
-export const { displayNotification, clearNotification } = notificationSlice.actions
+export const { displayNotification, clearNotification } =
+  notificationSlice.actions
 export default notificationSlice.reducer

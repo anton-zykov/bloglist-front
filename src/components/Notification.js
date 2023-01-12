@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
 const SuccessNotification = () => {
-  const notification = useSelector(state => state.notification)
+  const notification = useSelector((state) => state.notification)
   if (!notification.content) {
     return null
   }

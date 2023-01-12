@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const NewBlogForm = ({ handleCreationOfBlogParentFunction }) => {
+const NewBlogForm = ({ user, toggleVisibility }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const dispatch = useDispatch()
 
   const handleCreationOfBlog = async (event) => {
     event.preventDefault()
@@ -12,10 +16,23 @@ const NewBlogForm = ({ handleCreationOfBlogParentFunction }) => {
       author,
       url,
     }
-    if (await handleCreationOfBlogParentFunction(newBlog)) {
+
+    try {
+      await dispatch(createBlog(newBlog, user))
+      dispatch(
+        setNotification(
+          `A new blog ${newBlog.title} by ${newBlog.author} added.`,
+          true,
+          5
+        )
+      )
       setTitle('')
       setAuthor('')
       setUrl('')
+      toggleVisibility()
+    } catch (error) {
+      dispatch(setNotification(error.response.data.error, false, 5))
+      console.log(error.response.data.error)
     }
   }
 
