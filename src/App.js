@@ -11,6 +11,7 @@ import { setLoggedInUser } from './reducers/userReducer'
 import UsersList from './components/UsersList'
 import UserBlogs from './components/UserBlogs'
 import BlogIndividual from './components/BlogIndividual'
+import Menu from './components/Menu'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -29,16 +30,9 @@ const App = () => {
   if (user) {
     return (
       <div className='container'>
-        <h2>Blogs</h2>
-        <p>Welcome, {user.name}!</p>
-        <button
-          onClick={() => {
-            window.localStorage.removeItem('loggedUser')
-            window.location.reload(false)
-          }}
-        >
-          Logout
-        </button>
+        <Menu />
+
+        <h2>Blog App</h2>
 
         <Notification />
         <Routes>

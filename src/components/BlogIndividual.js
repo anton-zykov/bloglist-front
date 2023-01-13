@@ -1,16 +1,17 @@
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { like, remove } from '../reducers/blogReducer'
+import { useNavigate, useParams } from 'react-router-dom'
+import { like, remove, comment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const BlogIndividual = () => {
   const dispatch = useDispatch()
-  const userId = useParams().id
+  const navigate = useNavigate()
+  const blogId = useParams().id
   const blogs = useSelector((state) => state.blogs)
-  const blog = blogs.find(
-    (b) => b.id === userId
-  )
+  const blog = blogs.find((b) => b.id === blogId)
   const user = useSelector((state) => state.user)
+  const [commentText, setComment] = useState('')
 
   const handleLikeIncrease = async (event) => {
     event.preventDefault()
@@ -34,6 +35,7 @@ const BlogIndividual = () => {
       )
     ) {
       try {
+        navigate('/')
         await dispatch(remove(blog, user))
         dispatch(
           setNotification(
@@ -48,15 +50,29 @@ const BlogIndividual = () => {
       }
     }
   }
+
+  const handleComment = async (event) => {
+    event.preventDefault()
+    try {
+      await dispatch(comment(blogId, commentText))
+    } catch (error) {
+      console.log('are we here')
+      dispatch(setNotification(error.response.data.error, false, 5))
+      console.log(error.response.data.error)
+    }
+  }
+
   if (!blogs.length) {
     return null
   } else {
     return (
       <div className='blog'>
-        <p>
+        <h3>
           {blog.title} by {blog.author}
+        </h3>
+        <p>
+          <a href={blog.url}>{blog.url}</a>
         </p>
-        <p>{blog.url}</p>
         <p>
           Likes: {blog.likes}{' '}
           <button id='likeButton' onClick={handleLikeIncrease}>
@@ -73,6 +89,20 @@ const BlogIndividual = () => {
         ) : (
           ''
         )}
+        <h3>Comments</h3>
+        <form onSubmit={handleComment} id='commentForm'>
+          <input
+            type='text'
+            value={commentText}
+            onChange={({ target }) => setComment(target.value)}
+          />
+          <button type='submit'>Comment</button>
+        </form>
+        <ul>
+          {blog.comments.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
       </div>
     )
   }
